@@ -8,7 +8,7 @@ Analyze any GitHub profile and get a developer score + brutally honest roast.
 
 ## Live Demo
 
-🚀 [Try it here](https://your-app-name.onrender.com)
+🚀 [Try it here](https://github-profile-analyzer-bbv5.onrender.com)
 
 ## Features
 
