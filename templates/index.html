@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Profile Analyzer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #c9d1d9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #58a6ff;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #8b949e;
+            margin-bottom: 40px;
+        }
+
+        .search-box {
+            background: #21262d;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #30363d;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 15px 20px;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            background: #0d1117;
+            color: #c9d1d9;
+            font-size: 1rem;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #58a6ff;
+        }
+
+        input[type="text"]::placeholder {
+            color: #6e7681;
+        }
+
+        button {
+            padding: 15px 30px;
+            background: #238636;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2ea043;
+        }
+
+        .error {
+            background: #f8514921;
+            border: 1px solid #f85149;
+            color: #f85149;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-card {
+            background: #21262d;
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid #30363d;
+            margin-bottom: 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #30363d;
+        }
+
+        .profile-info h2 {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .profile-info .username {
+            color: #8b949e;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .profile-info .bio {
+            color: #c9d1d9;
+            font-style: italic;
+        }
+
+        .score-section {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .score-section.low {
+            background: linear-gradient(135deg, #f85149 0%, #da3633 100%);
+        }
+
+        .score-section.medium {
+            background: linear-gradient(135deg, #d29922 0%, #e3b341 100%);
+        }
+
+        .score-number {
+            font-size: 4rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .score-label {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            margin-top: 5px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #58a6ff;
+        }
+
+        .stat-label {
+            color: #8b949e;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .languages-section {
+            margin-bottom: 25px;
+        }
+
+        .languages-section h3 {
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .languages-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .language-tag {
+            background: #388bfd26;
+            color: #58a6ff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #388bfd59;
+        }
+
+        .popular-repo {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .popular-repo h3 {
+            color: #ffffff;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        .repo-name {
+            color: #58a6ff;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .member-since {
+            text-align: center;
+            color: #8b949e;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .roast-section {
+            background: #161b22;
+            border: 1px solid #f8514950;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .roast-section h3 {
+            color: #f85149;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .roast-text {
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .profile-header {
+                justify-content: center;
+                text-align: center;
+            }
+            
+            .profile-info {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 GitHub Profile Analyzer</h1>
+        <p class="subtitle">Get your developer score and brutally honest feedback</p>
+        
+        <div class="search-box">
+            <form class="search-form" method="POST">
+                <input type="text" name="username" placeholder="Enter GitHub username..." required>
+                <button type="submit">Analyze</button>
+            </form>
+        </div>
+
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if result %}
+        <div class="profile-card">
+            <div class="profile-header">
+                <img src="{{ result.avatar }}" alt="Avatar" class="avatar">
+                <div class="profile-info">
+                    <h2>{{ result.name or result.username }}</h2>
+                    <p class="username">@{{ result.username }}</p>
+                    {% if result.bio %}
+                    <p class="bio">"{{ result.bio }}"</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="score-section {% if result.score < 40 %}low{% elif result.score < 70 %}medium{% endif %}">
+                <div class="score-number">{{ result.score }}/100</div>
+                <div class="score-label">
+                    {% if result.score >= 80 %}
+                        🔥 Elite Developer
+                    {% elif result.score >= 60 %}
+                        💪 Solid Contributor
+                    {% elif result.score >= 40 %}
+                        📈 Growing Developer
+                    {% else %}
+                        🌱 Just Getting Started
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">{{ result.public_repos }}</div>
+                    <div class="stat-label">Repositories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ result.total_stars }}</div>
+                    <div class="stat-label">Total Stars</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ result.total_forks }}</div>
+                    <div class="stat-label">Total Forks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ result.followers }}</div>
+                    <div class="stat-label">Followers</div>
+                </div>
+            </div>
+
+            {% if result.languages %}
+            <div class="languages-section">
+                <h3>💻 Languages Used</h3>
+                <div class="languages-list">
+                    {% for lang in result.languages %}
+                    <span class="language-tag">{{ lang }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if result.most_popular_repo %}
+            <div class="popular-repo">
+                <h3>⭐ Most Popular Repository</h3>
+                <span class="repo-name">{{ result.most_popular_repo }}</span>
+            </div>
+            {% endif %}
+
+        </div>
+
+        {% if result.roast %}
+        <div class="roast-section">
+            <h3>🔥 The Roast</h3>
+            <p class="roast-text">{{ result.roast }}</p>
+        </div>
+        {% endif %}
+
+        {% endif %}
+    </div>
+</body>
+</html>
